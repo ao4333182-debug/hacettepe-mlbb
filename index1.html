@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turnuva Arena • HÜ E-Spor x MLBB</title>
+<style>
+:root{
+  --bg:#0d1320;
+  --bg-2:#101927;
+  --panel:#141e2e;
+  --panel-2:#172337;
+  --card:#182437;
+  --text:#e8eef9;
+  --muted:#94a8c2;
+  --border:#2f415a;
+  --line:#42536d;
+  --accent:#51d6b0;
+  --accent-2:#2cb5ff;
+  --accent-text:#08221c;
+  --win:#184d43;
+  --win-text:#9af5d9;
+  --champ-bg:#332b1b;
+  --champ-border:#c8a85e;
+  --champ-text:#f7dda2;
+  --lose:#5c1e29;
+  --lose-text:#ffd1d6;
+  --hero-image:none;
+  --shadow:0 18px 40px rgba(0,0,0,.22);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at top right, rgba(44,181,255,.12), transparent 28%), radial-gradient(circle at top left, rgba(81,214,176,.10), transparent 24%), var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:18px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:rgba(7,12,20,.55);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand-mark{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07131f;box-shadow:var(--shadow);font-weight:800}
+.brand h1{font-size:23px;margin:0;line-height:1.1}
+.brand small,.header-note,.muted{color:var(--muted)}
+.header-actions,.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+main{padding:22px}
+button,input,select,textarea{font:inherit;color:inherit;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;transition:.18s ease}
+button{cursor:pointer}
+button:hover:not(:disabled),input:hover,select:hover,textarea:hover,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px rgba(81,214,176,.12)}
+button:disabled{opacity:.45;cursor:default;box-shadow:none}
+.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-text);font-weight:800;border:0}
+.secondary{background:transparent}
+.panel{background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.00)), var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.hero{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;align-items:stretch}
+.hero-card{min-height:130px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg, rgba(81,214,176,.10), rgba(44,181,255,.08));border:1px solid rgba(255,255,255,.05)}
+.hero-card h2{margin:0 0 8px;font-size:24px;line-height:1.2}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:7px 12px;color:var(--text);font-size:13px}
+.hero-side{display:grid;gap:12px}
+.mini-card{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.mini-card strong{display:block;font-size:14px;margin-bottom:4px}
+.setup{display:grid;grid-template-columns:minmax(260px,1fr) minmax(280px,1.25fr);gap:20px}
+label{display:block;color:#b8c8dd;margin:0 0 7px;font-weight:600}
+input,select,textarea{width:100%;margin-bottom:12px}
+textarea{min-height:220px;resize:vertical}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.board{overflow:auto;max-height:76vh;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.00)), var(--bg-2)}
+.tree{position:relative;display:flex;gap:52px;padding:18px 24px;width:max-content}
+.round{width:210px;flex:none;position:relative;z-index:1}
+.round h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#b5c5d9;height:30px;margin:0;text-align:center}
+.matches{display:flex;flex-direction:column;justify-content:space-around}
+.match{border:1px solid var(--border);border-radius:10px;background:var(--card);overflow:hidden;flex:none;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.player{display:flex;width:100%;height:36px;align-items:center;text-align:left;border:0;border-radius:0;padding:6px 10px;background:transparent;gap:6px;font-size:13px}
+.player+.player{border-top:1px solid var(--border)}
+.player span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.player.win{background:var(--win);color:var(--win-text);font-weight:700}
+.player:disabled{opacity:1;color:#6e7f96}
+.champ{padding:16px;text-align:center;border:1px solid var(--champ-border);background:var(--champ-bg);color:var(--champ-text);border-radius:12px;overflow-wrap:anywhere;font-weight:700}
+.lines{position:absolute;inset:0;pointer-events:none;z-index:0}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
+.stats strong{color:var(--accent)}
+.hidden{display:none!important}
+#message{color:#ffd38a;min-height:20px;font-weight:600}
+#headingWrap{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#heading{margin:0}
+.note-list{margin:0;padding-left:18px;color:var(--muted)}
+#storage{margin-top:14px}
+.presentation .setup,.presentation .edittools,.presentation .hero-side .mini-card:last-child{display:none}
+.presentation main{padding:10px}
+.presentation .board{max-height:85vh}
+.presentation .hero{grid-template-columns:1fr}
+.presentation header{position:static}
+.footer-note{font-size:12px;color:var(--muted)}
+@media(max-width:980px){.hero,.setup{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:12px}header{padding:14px 12px}.brand h1{font-size:20px}.round{width:195px}}
+@media print{
+  body{background:#fff;color:#000}
+  header,.panel.hero,.setup,.actions,.stats,.footer-note{display:none!important}
+  .board{overflow:visible;max-height:none;border:0;background:#fff}
+  .tree{transform-origin:top left}
+  .match,.champ{background:#fff;color:#000}
+  .player{color:#000}
+  .round h3{color:#000}
+}
+
+.hero-bg{
+  position:relative;
+  overflow:hidden;
+}
+.hero-bg::after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:42%;
+  background-image:var(--hero-image);
+  background-repeat:no-repeat;
+  background-position:right center;
+  background-size:contain;
+  opacity:.34;
+  pointer-events:none;
+  filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));
+}
+.hero-bg::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, rgba(0,0,0,.0) 0%, rgba(0,0,0,.0) 45%, rgba(0,0,0,.22) 100%);
+  pointer-events:none;
+}
+.hero-card > *{position:relative; z-index:1}
+.player.lose{background:var(--lose);color:var(--lose-text);font-weight:700}
+
+
+/* Character artwork stays on the visible bracket viewport while scrolling. */
+.board{background-image:linear-gradient(90deg,rgba(10,13,17,.78),rgba(10,13,17,.38)),var(--hero-image);background-repeat:no-repeat;background-position:center,right center;background-size:cover,auto 100%;background-attachment:local,scroll;}
+.match{background:color-mix(in srgb,var(--card) 88%,transparent)}
+.player.win,.player.win:disabled{background:#14532d;color:#bbf7d0;box-shadow:inset 0 0 13px #22c55e77,inset 3px 0 #4ade80;font-weight:700;opacity:1}
+.player.lose,.player.lose:disabled{background:#641d28;color:#fecaca;box-shadow:inset 0 0 13px #ef444466,inset 3px 0 #f87171;font-weight:700;opacity:1}
+@media print{.board{background:none!important}}
+
+.mobile-nav,.mobile-matches{display:none}.mobile-view .mobile-matches{display:grid;gap:12px;padding:12px}.mobile-view .board{display:none}.mobile-nav{gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}.mobile-nav select{width:auto;flex:1;margin:0;min-width:0}.mobile-nav button{min-height:44px}.mobile-matches .player{min-height:48px;height:auto;white-space:normal;font-size:15px}.mobile-matches .player span{white-space:normal;overflow-wrap:anywhere}.mobile-matches .match{background:var(--card)}.mobile-matches .match-label{padding:8px 10px;color:var(--muted);font-size:12px}.mobile-view .mobile-matches{background-image:linear-gradient(rgba(10,13,17,.8),rgba(10,13,17,.65)),var(--hero-image);background-size:cover,auto 100%;background-position:center;background-repeat:no-repeat;border:1px solid var(--border);border-radius:14px}.mobile-view .mobile-nav{display:flex}.view-toggle{display:none}.round{width:210px}
+@media(max-width:760px){header{position:static;gap:8px}.brand{flex-wrap:nowrap;min-width:0}.brand>div:last-child{min-width:0}.brand-mark{flex:none;width:44px;height:44px}.brand small{overflow-wrap:anywhere}.header-actions{width:100%}.header-actions button{flex:1}main{padding:10px;min-width:0}.panel{padding:14px;min-width:0}.hero,.setup{grid-template-columns:minmax(0,1fr)}.setup>div{min-width:0}.hero-card h2{font-size:20px}.actions button{flex:1 1 140px;min-height:44px}input,select,textarea,button{font-size:16px}input[type=file]{max-width:100%}.board{max-height:70vh;max-width:100%;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.view-toggle{display:inline-block;min-height:44px}.player{touch-action:manipulation}.stats{font-size:14px;overflow-wrap:anywhere}#heading{font-size:20px;overflow-wrap:anywhere;min-width:0}.round{width:210px}.presentation .board{max-height:75vh}}
+@media print{.mobile-nav,.mobile-matches,.view-toggle{display:none!important}.mobile-view .board{display:block!important}}
+
+body:not(.admin) #setup,body:not(.admin) .edittools,body:not(.admin) .hero-side .mini-card:last-child{display:none!important}
+body:not(.admin) .hero{grid-template-columns:1fr}body:not(.admin) .hero-side{display:none}
+body:not(.admin) .player:disabled:not(.win):not(.lose){color:var(--text)}
+body.saving #setup,body.saving .edittools,body.saving .player{pointer-events:none;opacity:.65}
+#onlineStatus{padding:10px 14px;margin:0 0 14px;border:1px solid var(--border);border-radius:12px;color:var(--muted);background:var(--panel);overflow-wrap:anywhere}
+#onlineStatus.error{border-color:#f87171;color:#fecaca}#onlineStatus.ok{border-color:#357d53;color:#bbf7d0}
+#loginPanel{max-width:450px;margin:0 auto 18px}#loginPanel h2{margin-top:0}#loginError{color:#fecaca;min-height:1.4em}#emptyState{text-align:center;padding:32px 16px}#emptyState h2{margin-top:0}
+#roleLabel{font-size:12px;color:var(--muted)}#loginPanel input{font-size:16px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-mark">🎮</div>
+    <div>
+      <h1>Turnuva Arena</h1>
+      <small id="brandSub">Hacettepe Üniversitesi E-Spor Topluluğu • MLBB odaklı turnuva yönetimi</small>
+    </div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="header-actions">
+    <span id="roleLabel">İzleyici</span><button id="adminAccess">Yönetici girişi</button><button id="signOut" class="hidden">Çıkış yap</button><button id="present">Sunum modu</button>
+    <button id="full">Tam ekran</button>
+  </div>
+</header>
+
+<main>
+  <div id="onlineStatus" role="status">Turnuva sunucusuna bağlanılıyor…</div>
+  <section class="panel hidden" id="loginPanel"><h2>Yönetici girişi</h2><form id="loginForm"><label for="email">E-posta</label><input id="email" type="email" autocomplete="username" required><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button type="submit" id="loginSubmit" class="primary">Giriş yap</button><button type="button" id="loginCancel">Vazgeç</button></div><p id="loginError" role="alert"></p></form></section>
+  <section class="panel hidden" id="emptyState"><h2>Turnuva henüz başlamadı</h2><p class="muted">Eşleştirmeler yayınlandığında bu sayfada otomatik olarak görünecek.</p></section>
+  <section class="panel hero" id="heroPanel">
+    <div class="panel hero-card" style="margin:0">
+      <div>
+        <h2 id="heroTitle">Hacettepe Üniversitesi E-Spor Topluluğu<br>MLBB Turnuva Paneli</h2>
+        <p class="header-note" id="heroDesc">Hacettepe E-Spor • Canlı eşleştirmeler ve turnuva sonuçları.</p>
+      </div>
+      <div class="hero-tags" id="heroTags">
+        <span class="badge">🏁 Son 64 → Final</span>
+        <span class="badge">⚔️ Tek tıklama ile kazanan seçimi</span>
+        <span class="badge">💾 Otomatik kayıt</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="mini-card">
+        <strong>Tema Profili</strong>
+        <div id="themePreview" class="muted">HÜ E-Spor x MLBB teması aktif.</div>
+      </div>
+      <div class="mini-card">
+        <strong>Hızlı kullanım</strong>
+        <ul class="note-list">
+          <li>Oyuncuları alt alta yaz.</li>
+          <li>Kura çek veya sıraya göre eşleştir.</li>
+          <li>Kazanan isme tıklayıp üst tura taşı.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel setup" id="setup">
+    <div>
+      <label for="title">Turnuva adı</label>
+      <input id="title" value="Hacettepe Üniversitesi E-Spor Topluluğu • MLBB Turnuvası">
+
+      <div class="grid-2">
+        <div>
+          <label for="size">Katılımcı sayısı</label>
+          <select id="size">
+            <option>8</option><option>16</option><option>32</option><option selected>64</option><option>128</option>
+          </select>
+        </div>
+        <div>
+          <label for="theme">Tema</label>
+          <select id="theme">
+            <option value="hu-mlbb" selected>HÜ E-Spor x MLBB</option>
+            <option value="hacettepe">Hacettepe E-Spor</option>
+            <option value="mlbb">MLBB Arena</option>
+            <option value="classic">Klasik Arena</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="muted">Her satıra bir oyuncu yaz. Manuel sıralamada ilk iki isim karşılaşır; ardından üçüncü ve dördüncü isim karşılaşır. Tema seçimi yalnızca görünümü değiştirir.</p>
+      <label for="artFile">Turnuva ağacı arka planı (isteğe bağlı Miya / Harith görseli)</label><input id="artFile" type="file" accept="image/*"><button id="artClear" type="button">Özel arka planı kaldır</button><div class="actions">
+        <button id="sample">Örnek isimleri doldur</button><button id="loadInitial" type="button">Eski turnuva yedeğini yükle</button>
+        <button id="clearNames" style="border-color:#a94b54">Tüm isimleri ve turnuvayı sil</button>
+      </div>
+    </div>
+
+    <div>
+      <label for="names">Oyuncular <span id="count"></span></label>
+      <textarea id="names" placeholder="Oyuncu 1&#10;Oyuncu 2&#10;Oyuncu 3"></textarea>
+      <div class="actions">
+        <button class="primary" id="random">Rastgele kura çek</button>
+        <button id="ordered">Girilen sırayla eşleştir</button>
+      </div>
+      <div id="message" role="status"></div>
+    </div>
+  </section>
+
+  <section id="game" class="hidden">
+    <div id="headingWrap">
+      <h2 id="heading"></h2>
+      <span class="badge" id="themeChip">🎨 HÜ E-Spor x MLBB</span>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="actions edittools" style="margin-bottom:14px">
+      <button id="undo">Son işlemi geri al</button>
+      <button id="reset">Sonuçları sıfırla</button>
+      <button id="clearTournament" style="border-color:#a94b54">Yeni turnuva (tümünü sil)</button>
+      <button id="save">Yedek indir</button>
+      <button id="load">Yedek yükle</button>
+      <input type="file" id="file" accept=".json" hidden style="display:none">
+      <button id="toggle">Kurulum panelini gizle/göster</button>
+    </div>
+    <button class="view-toggle" id="viewToggle" type="button">Ağaç görünümü</button><div class="mobile-nav"><button id="prevRound" aria-label="Önceki tur">◀</button><select id="roundPick" aria-label="Tur seç"></select><button id="nextRound" aria-label="Sonraki tur">▶</button></div><div class="mobile-matches" id="mobileMatches"></div><div class="board"><div class="tree" id="tree"></div></div>
+    <p class="muted" id="gameHelp">Sonuçlar otomatik güncellenir.</p>
+  </section>
+
+  <p class="muted" id="storage"></p>
+  <p class="footer-note">Not: Resmî logo görsellerini eklemedim; onun yerine Hacettepe/MLBB hissi veren renk ve metin odaklı bir tema sistemi kullandım.</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const sizes=[8,16,32,64,128];
+const ADMIN_UID='4b7982f2-94f7-4a7e-ae0f-fde2e81b4d6e';
+const URL_SUPABASE='https://hsijiapsadpqzuoklifc.supabase.co';
+const PUBLIC_KEY='sb_publishable_VOp6Q9p79HXIWwl9epfqdA_V-YMtYPF';
+const db=window.supabase?.createClient(URL_SUPABASE,PUBLIC_KEY,{auth:{persistSession:false,autoRefreshToken:true,detectSessionInUrl:false}});
+let admin=false,ready=false,busy=false,revision=null,reading=false,channel=null;
+const canEdit=()=>admin&&ready&&!busy&&!presentation;
+let state=null,history=[],presentation=false;
+const copy=x=>JSON.parse(JSON.stringify(x));
+const themes={
+  'hu-mlbb':{
+    label:'HÜ E-Spor x MLBB',
+    sub:'Hacettepe Üniversitesi E-Spor Topluluğu • MLBB odaklı turnuva yönetimi',
+    heroTitle:'Hacettepe Üniversitesi E-Spor Topluluğu<br>MLBB Turnuva Paneli',
+    heroDesc:'Akademik topluluk etkinlikleri ve Mobile Legends: Bang Bang turnuvaları için tasarlanmış koyu temalı yönetim ekranı.',
+    preview:'Hacettepe kırmızısı ve yeşil zafer vurguları.',
+    chip:'🎨 HÜ E-Spor x MLBB',
+    heroName:'Miya',
+    tags:['🎓 Topluluk teması','🛡️ Turnuva ağacı','📱 MLBB uyumlu sahne'],
+    vars:{'--bg':'#120f16','--bg-2':'#17131f','--panel':'#1a1521','--panel-2':'#241d2c','--card':'#2a2032','--text':'#f2eef8','--muted':'#b8adc7','--border':'#4c385f','--line':'#705386','--accent':'#ba1e3e','--accent-2':'#24934d','--accent-text':'#fdf7fb','--win':'#3a1f5e','--win-text':'#b9e8ff','--champ-bg':'#392318','--champ-border':'#e0a85c','--champ-text':'#ffe0a5','--lose':'#5c2230','--lose-text':'#ffd9df','--hero-image':'url("data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 700\"%3E%3Cdefs%3E%3ClinearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"%3E%3Cstop offset=\"0%25\" stop-color=\"%2324934d\"/%3E%3Cstop offset=\"100%25\" stop-color=\"%23ba1e3e\"/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill=\"url(%23g)\" opacity=\"0.95\"%3E%3Cpath d=\"M334 89c31 21 43 56 39 91-3 32-21 55-42 76 12 10 28 20 43 48 19 36 18 74 12 112-7 40-9 81-2 121 4 23 11 49 31 63 9 6 14 18 7 26-10 10-29 5-41 0-33-14-52-45-63-78-6-18-9-36-12-54-2 17-6 34-11 51-12 37-37 74-77 84-13 4-33 7-39-7-4-10 4-18 13-24 18-12 29-29 35-49 15-47 10-96 4-144-5-41-8-84 10-123 11-23 27-39 41-48-20-19-36-39-40-68-5-35 5-76 32-100 16-14 33-18 60-18z\"/%3E%3Cpath d=\"M204 188c27 10 44 29 57 55 16 33 22 69 20 105-2 39-12 77-31 111-18 34-50 67-90 67-20 0-27-15-16-31 9-13 24-19 33-32 19-27 24-61 23-94-2-35-12-69-17-103-4-25-2-58 21-74z\"/%3E%3Cpath d=\"M377 222c41 11 61 49 69 88 9 42 3 87-12 126-13 32-32 65-64 80-18 8-39 7-35-18 2-14 17-22 25-32 18-24 27-54 30-84 4-40-4-79-9-118-2-14-5-29-4-42z\"/%3E%3Cpath d=\"M139 455c48 3 96 4 143 5 34 1 74 3 97 28 14 15 17 39 9 58-10 23-33 36-57 43-52 16-108 10-160 0-34-6-70-17-92-46-15-20-11-50 8-67 15-14 34-20 52-21z\"/%3E%3Cpath d=\"M111 282c58-23 111-32 171-33-48 21-86 54-115 99-23 35-35 76-39 118-11-24-24-47-28-73-5-40-1-91 11-111z\"/%3E%3Cpath d=\"M313 150c29 16 64 41 78 61-37-8-85-10-124 3 7-27 21-49 46-64z\"/%3E%3C/g%3E%3Ctext x=\"338\" y=\"640\" font-size=\"68\" text-anchor=\"middle\" fill=\"%23ffffff\" fill-opacity=\"0.16\" font-family=\"Arial, sans-serif\" font-weight=\"700\"%3EMIYA%3C/text%3E%3C/svg%3E")'}
+  },
+  'hacettepe':{
+    label:'Hacettepe E-Spor',
+    sub:'Hacettepe Üniversitesi E-Spor Topluluğu için sade turnuva görünümü',
+    heroTitle:'Hacettepe Üniversitesi E-Spor Topluluğu',
+    heroDesc:'Topluluk içi turnuvalar, seçmeler ve etkinlik günleri için sade kırmızı-gri görünüm.',
+    preview:'Üniversite hissi veren bordo/kırmızı tonları ağırlıklı.',
+    chip:'🎓 Hacettepe E-Spor',
+    heroName:'Miya',
+    tags:['🏫 Üniversite kimliği','🏆 Topluluk turnuvası','🧾 Sade görünüm'],
+    vars:{'--bg':'#151417','--bg-2':'#1b1a1e','--panel':'#231f24','--panel-2':'#2a242b','--card':'#31272f','--text':'#f7f2f4','--muted':'#c3b2b8','--border':'#5b3b47','--line':'#85606d','--accent':'#a31935','--accent-2':'#d34a63','--accent-text':'#fff4f7','--win':'#4a1d2f','--win-text':'#ffd6df','--champ-bg':'#3b2c1f','--champ-border':'#d5ad70','--champ-text':'#ffe3b8','--lose':'#5b1d2e','--lose-text':'#ffd7de','--hero-image':'url("data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 700\"%3E%3Cg fill=\"%23d34a63\" opacity=\"0.88\"%3E%3Cpath d=\"M253 81c43 0 84 33 88 87 4 46-17 74-44 101 37 34 58 84 58 139 0 66-23 132-25 198-1 27 9 58 35 71 12 6 16 19 9 28-9 12-28 9-42 5-39-12-61-48-71-86-9-35-9-71-11-107-2 33-5 67-14 98-11 38-31 76-66 95-12 7-31 11-41 0-8-9-3-23 9-31 21-14 29-39 33-63 10-62-7-125-15-186-6-49-3-102 21-147 14-26 35-48 56-65-29-24-50-52-49-97 0-56 38-90 69-90z\"/%3E%3Cpath d=\"M132 275c51-16 109-19 158-10-45 22-75 60-95 105-18 41-27 85-25 129-18-30-39-63-46-99-9-42-4-101 8-125z\"/%3E%3Cpath d=\"M356 238c43 8 70 43 83 82 18 52 13 112-8 163-15 37-42 76-84 81-12 1-24-4-22-19 2-13 13-22 21-31 23-28 37-63 43-99 7-43 4-87-5-130-3-15-8-31-6-47z\"/%3E%3C/g%3E%3Ctext x=\"336\" y=\"640\" font-size=\"68\" text-anchor=\"middle\" fill=\"%23ffffff\" fill-opacity=\"0.14\" font-family=\"Arial, sans-serif\" font-weight=\"700\"%3EMIYA%3C/text%3E%3C/svg%3E")'}
+  },
+  'mlbb':{
+    label:'MLBB Arena',
+    sub:'Mobile Legends: Bang Bang temalı hızlı turnuva görünümü',
+    heroTitle:'MLBB Arena Bracket',
+    heroDesc:'Hızlı maç akışı, sahne modu ve parlak mavi/altın vurgularla MLBB yayın atmosferi.',
+    preview:'Neon mavi ve altın detaylarla e-spor sahnesi hissi.',
+    chip:'⚔️ MLBB Arena',
+    heroName:'Harith',
+    tags:['📱 Mobile Legends','💥 E-spor sahnesi','✨ Canlı görünüm'],
+    vars:{'--bg':'#08101d','--bg-2':'#0c1524','--panel':'#111c30','--panel-2':'#16243b','--card':'#1b2c48','--text':'#edf6ff','--muted':'#9bb3d3','--border':'#34507a','--line':'#4f6d98','--accent':'#48b6ff','--accent-2':'#f1c55b','--accent-text':'#071420','--win':'#12375c','--win-text':'#d2ecff','--champ-bg':'#3b3119','--champ-border':'#f1c55b','--champ-text':'#ffe9ab','--lose':'#572434','--lose-text':'#ffdbe4','--hero-image':'url("data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 700\"%3E%3Cdefs%3E%3ClinearGradient id=\"g2\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"%3E%3Cstop offset=\"0%25\" stop-color=\"%2348b6ff\"/%3E%3Cstop offset=\"100%25\" stop-color=\"%23f1c55b\"/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill=\"url(%23g2)\" opacity=\"0.95\"%3E%3Cpath d=\"M262 84c40 0 75 30 78 72 3 39-21 67-50 89 30 15 57 41 70 72 15 36 15 76 5 114-10 37-28 70-47 103 24 22 48 49 51 84 4 48-38 87-84 87-50 0-87-44-79-94 5-29 25-53 46-72-30-49-57-100-65-160-6-45-2-95 22-135 17-28 43-48 72-58-29-22-52-50-49-88 4-42 40-74 80-74z\"/%3E%3Cpath d=\"M165 222c33 2 64 10 96 29-34 15-58 42-77 73-20 33-34 68-46 105-17-19-33-41-39-66-11-42 5-98 22-141 9 0 27-1 44 0z\"/%3E%3Cpath d=\"M342 240c18-8 40-11 61-10 14 0 30 2 40 11 17 15 24 39 28 61 9 48 2 105-30 143-13 16-32 29-54 27-14-1-16-16-8-25 36-44 49-108 39-164-2-13-6-27-11-39-23 0-46 1-65-4z\"/%3E%3Ccircle cx=\"256\" cy=\"149\" r=\"38\"/%3E%3C/g%3E%3Ctext x=\"330\" y=\"640\" font-size=\"64\" text-anchor=\"middle\" fill=\"%23ffffff\" fill-opacity=\"0.16\" font-family=\"Arial, sans-serif\" font-weight=\"700\"%3EHARITH%3C/text%3E%3C/svg%3E")'}
+  },
+  'classic':{
+    label:'Klasik Arena',
+    sub:'Genel kullanıma uygun nötr turnuva görünümü',
+    heroTitle:'Turnuva Arena',
+    heroDesc:'Tekli eleme formatı için sade ve genel amaçlı klasik koyu tema.',
+    preview:'Nötr turkuaz vurgulu klasik tema.',
+    chip:'🏆 Klasik Arena',
+    heroName:'',
+    tags:['🎯 Genel kullanım','🗂️ Sade görünüm','💾 Canlı kayıt'],
+    vars:{'--bg':'#0d1320','--bg-2':'#101927','--panel':'#141e2e','--panel-2':'#172337','--card':'#182437','--text':'#e8eef9','--muted':'#94a8c2','--border':'#2f415a','--line':'#42536d','--accent':'#51d6b0','--accent-2':'#2cb5ff','--accent-text':'#08221c','--win':'#184d43','--win-text':'#9af5d9','--champ-bg':'#332b1b','--champ-border':'#c8a85e','--champ-text':'#f7dda2','--lose':'#5c1e29','--lose-text':'#ffd1d6','--hero-image':'none'}
+  }
+};
+const samplePools={
+  default:['Atlas','Tigreal','Miya','Balmond','Layla','Gusion','Chou','Fanny','Lancelot','Eudora','Saber','Franco','Granger','Valir','Lunox','Harith','Claude','Brody','Moskov','Natan','Fredrinn','Xavier','Joy','Melissa','Angela','Khufra','Pharsa','Benedetta','Aamon','Beatrix','Aldous','Paquito','Kagura','Ruby','Esmeralda','Baxia','Martis','Yi Sun-shin','Selena','Wanwan','Barats','Yu Zhong','Arlott','Mathilda','Diggie','Novaria','Floryn','Hanabi','Karrie','Alpha','Jawhead','Minotaur','Hylos','Terizla','Lylia','Aurora','Vale','Gatotkaca','Sun','Natalia','Rafaela','Cecilion','Irithel','Kimmy'],
+  prefix:'Takım'
+};
+const names=()=>$('names').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+let customArt='';
+const safeArt=v=>typeof v==='string'&&v.length<=4800000&&/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v)?v:'';
+function count(){ $('count').textContent=`(${names().length}/${$('size').value})`; }
+function applyTheme(themeName){
+  const theme=Object.hasOwn(themes,themeName)?themes[themeName]:themes['hu-mlbb'];
+  for(const [k,v] of Object.entries(theme.vars)) document.documentElement.style.setProperty(k,v);
+  if(customArt) document.documentElement.style.setProperty('--hero-image',`url("${customArt}")`);
+  $('brandSub').textContent=theme.sub;
+  $('heroTitle').innerHTML=theme.heroTitle;
+  $('heroDesc').textContent=admin?'Yönetici paneli • Sonuçları seç ve tüm izleyicilere yayınla.':'Canlı turnuva • Eşleştirmeleri ve sonuçları takip et.';
+  $('themePreview').textContent=theme.preview + (theme.heroName ? ` • Arka plan kahramanı: ${theme.heroName}` : '');
+  $('themeChip').textContent=theme.chip;
+  $('heroTags').innerHTML=['🏆 Tekli eleme','🔴 Canlı sonuçlar',admin?'🔐 Yönetici':'👁️ İzleyici'].map(t=>`<span class="badge">${t}</span>`).join('');
+}
+
+function status(msg,kind=''){ $('onlineStatus').textContent=msg; $('onlineStatus').className=kind; }
+function roleUI(){
+ document.body.classList.toggle('admin',admin); document.body.classList.toggle('saving',busy);
+ $('roleLabel').textContent=admin?'Yönetici':'İzleyici • Salt okunur';
+ $('adminAccess').classList.toggle('hidden',admin); $('signOut').classList.toggle('hidden',!admin); $('signOut').disabled=busy;
+ $('gameHelp').textContent=admin?'Kazananı seçmek için ismine tıkla. Sonuçlar tüm izleyicilere yayınlanır.':'Salt okunur ekran • Sonuçlar otomatik güncellenir.';
+ $('emptyState').classList.toggle('hidden',!ready||!!state||admin);
+ $('storage').textContent=admin?'Sonuçlar Supabase üzerinde saklanır. İsim taslağı yalnızca bu ekranda kalır; kura çekildiğinde yayınlanır.':'Turnuva verileri internet üzerinden alınır.';
+ applyTheme(state?.theme||$('theme').value);
+ if(state)render();else{$('game').classList.add('hidden');$('tree').replaceChildren();$('mobileMatches').replaceChildren();}
+}
+function publicData(){return {state:state?copy(state):null,art:state?safeArt(customArt):''};}
+function applyRow(row){
+ const incoming=row.data?.state??(valid(row.data)?row.data:null);
+ if(incoming!==null&&!valid(incoming)) throw Error('Geçersiz turnuva verisi');
+ const changed=!ready||revision!==row.updated_at;
+ if(changed){state=incoming?copy(incoming):null;customArt=safeArt(row.data?.art);history=[];revision=row.updated_at;
+ if(state){$('title').value=state.title;$('size').value=state.players.length;$('names').value=state.players.join('\n');$('theme').value=Object.hasOwn(themes,state.theme)?state.theme:'hu-mlbb';}else{$('names').value='';}
+ count();}
+ const first=!ready; ready=true;
+ if(changed||first)roleUI();
+}
+async function refresh(force=false){
+ if(!db||busy||reading)return false;
+ reading=true;const readRevision=revision;
+ try{
+  if(ready&&!force){const meta=await db.from('tournament').select('updated_at').eq('id',1).single();if(meta.error)throw meta.error;if(busy||revision!==readRevision)return false;if(meta.data.updated_at===revision){status(admin?'Bağlı • Yönetici':'Bağlı • Canlı izleme','ok');return true;}}
+  const {data,error}=await db.from('tournament').select('data,updated_at').eq('id',1).single();if(error)throw error;if(busy||revision!==readRevision)return false;applyRow(data);status(admin?'Bağlı • Yönetici':'Bağlı • Canlı izleme','ok');return true;
+ }catch(e){status('Sunucuya ulaşılamadı: '+(e.message||'Bağlantı hatası')+'. Otomatik tekrar denenecek.','error');return false;}
+ finally{reading=false;}
+}
+async function store(){
+ if(!admin||!ready||busy)return;
+ busy=true;roleUI();status('Sonuçlar yayınlanıyor…');
+ const payload=publicData(); const previous=revision; const stamp=new Date().toISOString();
+ try{
+  let query=db.from('tournament').update({data:payload,updated_at:stamp}).eq('id',1);
+  query=previous===null?query.is('updated_at',null):query.eq('updated_at',previous);
+  const {data,error}=await query.select('updated_at').single();if(error||!data)throw error||Error('Güncelleme yetkisi yok veya kayıt değişti');
+  revision=data.updated_at;status('Yayınlandı • Tüm izleyiciler güncellenecek','ok');
+ }catch(e){
+  busy=false;ready=false;revision=null;
+  await refresh(true);roleUI();
+  status('Son işlem yayınlanamadı. Sunucudaki kayıt geri yüklendi veya bağlantı bekleniyor: '+(e.message||'Hata'),'error');
+ }finally{busy=false;roleUI();}
+}
+function update(){count();applyTheme($('theme').value);if(state&&canEdit()&&state.theme!==$('theme').value){state.theme=$('theme').value;store();}}
+function rounds(s){
+  let a=s.players.map((_,i)=>i), out=[];
+  for(let r=0;r<s.results.length;r++){
+    let m=[];
+    for(let i=0;i<a.length;i+=2) m.push([a[i],a[i+1]]);
+    out.push(m);
+    a=m.map((p,i)=>p.every(x=>x!==null)&&p.includes(s.results[r][i])?s.results[r][i]:null);
+  }
+  return out;
+}
+function start(shuffle){
+  if(!canEdit())return;
+  let n=+$('size').value,p=names();
+  if(p.length!==n){ $('message').textContent=`Tam olarak ${n} isim gerekli; şu an ${p.length} isim var.`; return; }
+  if(new Set(p.map(x=>x.toLocaleLowerCase('tr'))).size!==n){ $('message').textContent='Tekrarlanan isimleri düzelt veya ayırt edici bir ek kullan.'; return; }
+  if(state && !confirm('Mevcut turnuva değiştirilecek. Devam edilsin mi?')) return;
+  if(shuffle) for(let i=p.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [p[i],p[j]]=[p[j],p[i]]; }
+  state={
+    title:$('title').value.trim()||'Turnuva',
+    players:p,
+    theme:$('theme').value,
+    results:Array.from({length:Math.log2(n)},(_,r)=>Array(n/2**(r+1)).fill(null))
+  };
+  history=[];
+  mobileRound=0;
+  $('message').textContent='';
+  render();
+  store();
+}
+function select(r,i,id){
+  if(!canEdit()||!state) return;
+  let p=rounds(state)[r][i];
+  if(p.includes(null)||!p.includes(id)||state.results[r][i]===id) return;
+  history.push(copy(state));
+  state.results[r][i]=id;
+  for(let k=r+1;k<state.results.length;k++){ i=Math.floor(i/2); state.results[k][i]=null; }
+  render();
+  store();
+}
+function node(tag,cls,txt){ let e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e; }
+let mobileView=window.matchMedia('(max-width:760px)').matches, mobileRound=0;
+function renderMobile(){
+ if(!state)return;
+ const rr=rounds(state), pick=$('roundPick'); mobileRound=Math.max(0,Math.min(mobileRound,rr.length));
+ $('game').classList.toggle('mobile-view',mobileView); $('viewToggle').textContent=mobileView?'Ağaç görünümü':'Tur tur görünüm';
+ pick.replaceChildren(); rr.forEach((m,i)=>{let n=m.length*2;let o=node('option','',n===2?'Final':n===4?'Yarı final':n===8?'Çeyrek final':'Son '+n);o.value=i;pick.append(o);});let o=node('option','','Şampiyon');o.value=rr.length;pick.append(o);pick.value=mobileRound;
+ $('prevRound').disabled=mobileRound===0;$('nextRound').disabled=mobileRound===rr.length;
+ const box=$('mobileMatches');box.replaceChildren();
+ if(mobileRound===rr.length){let c=state.results.at(-1)[0];box.append(node('div','champ',c===null?'🏆 Bekleniyor':'🏆 '+state.players[c]));return;}
+ rr[mobileRound].forEach((p,i)=>{let m=node('div','match');m.append(node('div','match-label','Maç '+(i+1)));p.forEach(id=>{let winner=state.results[mobileRound][i],win=id!==null&&winner===id,lose=id!==null&&winner!==null&&winner!==id;let b=node('button','player'+(win?' win':'')+(lose?' lose':''));b.disabled=!canEdit()||p.includes(null);b.append(node('span','',id===null?'Bekleniyor':state.players[id]+(win?' ✓':lose?' ×':'')));b.onclick=()=>select(mobileRound,i,id);m.append(b);});box.append(m);});
+}
+$('viewToggle').onclick=()=>{mobileView=!mobileView;renderMobile();};$('roundPick').onchange=()=>{mobileRound=+$('roundPick').value;renderMobile();};$('prevRound').onclick=()=>{mobileRound--;renderMobile();};$('nextRound').onclick=()=>{mobileRound++;renderMobile();};
+function render(){
+  if(!state) return;
+  applyTheme(state.theme||$('theme').value);
+  $('game').classList.remove('hidden');
+  $('heading').textContent=state.title;
+  if(Object.hasOwn(themes,state.theme)) $('theme').value=state.theme;
+  let rr=rounds(state), n=state.players.length, H=n/2*92, done=state.results.flat().filter(x=>x!==null).length, champ=state.results.at(-1)[0];
+  $('stats').textContent=`${n} oyuncu • ${done}/${n-1} maç tamamlandı • ${champ===null?'Turnuva devam ediyor':'Şampiyon: '+state.players[champ]}`;
+  $('undo').disabled=!history.length;
+  let t=$('tree');
+  t.replaceChildren();
+  let ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('class','lines');
+  svg.setAttribute('width',24+rr.length*262+210+24);
+  svg.setAttribute('height',H+48);
+  t.append(svg);
+  function line(x,y,x2,y2){
+    let path=document.createElementNS(ns,'path');
+    let mid=(x+x2)/2;
+    path.setAttribute('d',`M${x} ${y} H${mid} V${y2} H${x2}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke','var(--line)');
+    path.setAttribute('stroke-width','1.5');
+    svg.append(path);
+  }
+  rr.forEach((matches,r)=>{
+    let col=node('div','round'), remain=matches.length*2;
+    col.append(node('h3','',remain===2?'Final':remain===4?'Yarı final':remain===8?'Çeyrek final':'Son '+remain));
+    let box=node('div','matches');
+    box.style.height=H+'px';
+    matches.forEach((p,i)=>{
+      let m=node('div','match');
+      p.forEach(id=>{
+        let isWinner=id!==null && state.results[r][i]===id;
+        let isLoser=id!==null && state.results[r][i]!==null && state.results[r][i]!==id;
+        let b=node('button','player'+(isWinner?' win':'')+(isLoser?' lose':''));
+        b.disabled=!canEdit()||p.includes(null);
+        let label=id===null?'Bekleniyor':state.players[id];
+        b.append(node('span','',label));
+        b.title=label;
+        if(isWinner) b.append(node('span','','✓'));
+        b.onclick=()=>select(r,i,id);
+        m.append(b);
+      });
+      box.append(m);
+      let y=48+(i+.5)*H/matches.length;
+      if(r!==rr.length-1){
+        let y2=48+(Math.floor(i/2)+.5)*H/(matches.length/2);
+        line(24+r*262+210,y,24+(r+1)*262,y2);
+      }
+    });
+    col.append(box); t.append(col);
+  });
+  let col=node('div','round');
+  col.append(node('h3','','Şampiyon'));
+  let box=node('div','matches');
+  box.style.height=H+'px';
+  box.append(node('div','champ',champ===null?'🏆 Bekleniyor':'🏆 '+state.players[champ]));
+  col.append(box); t.append(col);
+  renderMobile();
+}
+function valid(s){
+  if(!s||typeof s.title!=='string'||!Array.isArray(s.players)||!sizes.includes(s.players.length)||!s.players.every(x=>typeof x==='string'&&x.trim())||!Array.isArray(s.results)||s.results.length!==Math.log2(s.players.length)) return false;
+  let a=s.players.map((_,i)=>i);
+  for(let r=0;r<s.results.length;r++){
+    let row=s.results[r];
+    if(!Array.isArray(row)||row.length!==a.length/2) return false;
+    for(let i=0;i<row.length;i++){
+      let x=row[i];
+      if(x!==null && (a[2*i]===null||a[2*i+1]===null||![a[2*i],a[2*i+1]].includes(x))) return false;
+    }
+    a=row;
+  }
+  return true;
+}
+$('artFile').onchange=()=>{if(!canEdit())return;const f=$('artFile').files[0];if(!f)return;if(f.size>3500000){alert('3,5 MB altında bir görsel seç.');return;}const reader=new FileReader();reader.onload=()=>{if(!canEdit())return;const v=safeArt(reader.result);if(!v){alert('PNG, JPG, WEBP veya GIF görseli seç.');return;}customArt=v;applyTheme($('theme').value);if(state)store();};reader.readAsDataURL(f);};
+$('artClear').onclick=()=>{if(!canEdit())return;customArt='';$('artFile').value='';applyTheme($('theme').value);if(state)store();};
+$('random').onclick=()=>start(true);
+$('ordered').onclick=()=>start(false);
+$('sample').onclick=()=>{if(!canEdit())return;
+  const total=+$('size').value;
+  const pool=[...samplePools.default];
+  const out=[];
+  for(let i=0;i<total;i++) out.push(pool[i]||`${samplePools.prefix} ${i+1}`);
+  $('names').value=out.join('\n');
+  update();
+};
+['title','size','names','theme'].forEach(id=>$(id).addEventListener('input',update));
+$('undo').onclick=()=>{ if(canEdit()&&history.length){ state=history.pop(); render(); store(); } };
+$('reset').onclick=()=>{if(!canEdit()||!state)return;
+  if(confirm('Tüm maç sonuçları sıfırlansın mı?')){
+    history.push(copy(state));
+    state.results.forEach(r=>r.fill(null));
+    render(); store();
+  }
+};
+function clearTournament(){
+  if(!canEdit())return;
+  if((state || names().length) && !confirm('Tüm oyuncu isimleri, eşleştirmeler ve maç sonuçları silinecek. Devam edilsin mi?')) return;
+  state=null; history=[];
+  $('names').value=''; $('message').textContent='';
+  $('tree').replaceChildren(); $('heading').textContent=''; $('stats').textContent='';
+  $('game').classList.add('hidden'); $('setup').classList.remove('hidden');
+  update(); store(); $('names').focus();
+}
+$('clearNames').onclick=clearTournament;
+$('clearTournament').onclick=clearTournament;
+$('toggle').onclick=()=>$('setup').classList.toggle('hidden');
+$('present').onclick=()=>{
+  presentation=!presentation;
+  document.body.classList.toggle('presentation',presentation);
+  $('present').textContent=presentation?'Sunumdan çık':'Sunum modu';
+  render();
+};
+$('full').onclick=async()=>{
+  try{
+    if(document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  }catch(e){ alert('Tam ekran için F11 tuşunu kullan.'); }
+};
+$('save').onclick=()=>{if(!admin||!state)return;
+  let payload={state,history,art:customArt,theme:$('theme').value};
+  let u=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  let a=node('a'); a.href=u; a.download='turnuva-yedek.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+};
+$('load').onclick=()=>{if(canEdit())$('file').click();};
+$('file').onchange=async()=>{
+  if(!canEdit())return;
+  try{
+    let data=JSON.parse(await $('file').files[0].text());
+    if(!canEdit()||!valid(data.state)) throw Error();
+    if(state && !confirm('Mevcut turnuva yedekle değiştirilsin mi?')) return;
+    state=data.state;customArt=safeArt(data.art);
+    history=Array.isArray(data.history)?data.history.filter(valid):[];
+    $('title').value=state.title;
+    $('size').value=state.players.length;
+    $('names').value=state.players.join('\n');
+    $('theme').value=state.theme || data.theme || 'hu-mlbb';
+    if(!state.theme) state.theme=$('theme').value;
+    render(); update(); store();
+  }catch(e){ alert('Geçerli bir turnuva yedeği seç.'); }
+  finally{ $('file').value=''; }
+};
+$('loadInitial').onclick=()=>{if(canEdit())$('file').click();};
+$('adminAccess').onclick=()=>{$('loginPanel').classList.toggle('hidden');$('email').focus();};
+$('loginCancel').onclick=()=>{$('loginPanel').classList.add('hidden');$('password').value='';};
+$('loginForm').onsubmit=async e=>{
+ e.preventDefault();if(!db)return; $('loginSubmit').disabled=true;$('loginError').textContent='';
+ try{
+ const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ if(error)throw error;
+ if(data.user?.id!==ADMIN_UID){await db.auth.signOut({scope:'local'});throw Error('Bu hesabın yönetici yetkisi yok.');}
+ admin=true; presentation=false;document.body.classList.remove('presentation');$('present').textContent='Sunum modu';
+ $('loginPanel').classList.add('hidden');$('password').value='';roleUI();await refresh(true);
+ }catch(e){$('loginError').textContent='Giriş başarısız: '+(e.message||'E-posta veya şifreyi kontrol et.');}
+ finally{$('loginSubmit').disabled=false;}
+};
+$('signOut').onclick=async()=>{if(busy)return;admin=false;history=[];roleUI();try{await db.auth.signOut({scope:'local'});}catch(e){}await refresh(true);};
+applyTheme('hu-mlbb');count();roleUI();
+if(!db){status('Supabase bağlantı kütüphanesi yüklenemedi. İnternet bağlantısını kontrol edip sayfayı yenile.','error');}
+else{
+ db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&admin){admin=false;history=[];roleUI();}});
+ refresh(true);
+ channel=db.channel('arena-public').on('postgres_changes',{event:'UPDATE',schema:'public',table:'tournament',filter:'id=eq.1'},()=>{refresh(true);}).subscribe();
+ setInterval(()=>{if(!document.hidden)refresh();},10000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(true);});
+}
+</script>
+</body>
+</html>
